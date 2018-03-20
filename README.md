@@ -1,4 +1,4 @@
-# miscellaneous single file html
+# web stuff
 
 **scratchpad.html** to keep temporary notes
 * double click line numbers to toggle relative and sequential line numbers
