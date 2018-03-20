@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+		<style type="text/css">
+			body {
+				margin: 0px 0px 0px 0px;
+				padding: 0px 0px 0px 0px;
+				background-color: #000000;
+				font-family: trebuchet, helvetica, arial;
+				overflow-y: scroll;
+				overflow-x: hidden;
+			}
+
+			.video-container {
+				height: calc(100vh - 5px);
+			}
+
+			.video-container > video {
+				width: 100%;
+				height: 100%;
+			}
+
+			@keyframes option-container-open-keyframes {
+				0% {
+					left: calc(100% + 400px);
+				}
+				100% {
+					left: calc(100% - 400px);
+				}
+			}
+
+			@keyframes option-container-close-keyframes {
+				0% {
+					left: calc(100% - 400px);
+				}
+				100% {
+					left: calc(100% + 400px);
+				}
+			}
+
+			.option-container-open {
+				left: calc(100% - 400px);
+
+				animation-name: option-container-open-keyframes;
+				animation-duration: 250ms;
+				animation-timing-function: ease-in;
+				animation-iteration-count: 1;
+			}
+
+			.option-container-close {
+				left: calc(100% + 400px);
+
+				animation-name: option-container-close-keyframes;
+				animation-duration: 250ms;
+				animation-timing-function: ease-out;
+				animation-iteration-count: 1;
+			}
+
+			.option-container {
+				position: absolute;
+				top: 10px;
+				width: 400px;
+				height: calc(100% - 65px);
+				overflow: hidden;
+				pointer-events: none;
+			}
+
+			.option-container > .tabs > *,
+			.option-container > .tabs-content > * {
+				margin: 0px 0px 0px 0px;
+				background-color: #999999;
+			}
+
+			.option-container > .tabs {
+				pointer-events: none;
+			}
+
+			.option-container > .tabs > .tab {
+				width: 100px;
+				background-color: #666666;
+				color: #999999;
+				border-top: 4px solid #000000;
+				border-right: 1px solid #000000;
+				border-bottom: 1px solid #666666;
+				border-left: 1px solid #000000;
+				font-family: trebuchet, helvetica, arial;
+				font-weight: 800;
+				pointer-events: auto;
+			}
+
+			.option-container > .tabs > .tab-active {
+				width: 100px;
+				border-top: 4px solid #FFFFB2;
+				border-right: 1px solid #000000;
+				border-bottom: 1px solid #999999;
+				border-left: 1px solid #000000;
+				font-family: trebuchet, helvetica, arial;
+				font-weight: 800;
+				pointer-events: auto;
+			}
+
+			.option-container > .tabs-content:before {
+				content: "";
+				position: absolute;
+				margin: -1px 0px 0px 0px;
+				right: 0px;
+				width: 200px; /* containerWidth - (tabWidth * tabCount) */
+				border-top: 1px solid #000000;
+			}
+
+			.option-container > .tabs-content {
+				height: calc(100% - 28px); /* - tabHeight */
+				border-bottom: 1px solid #000000;
+				border-left: 1px solid #000000;
+			}
+
+			.option-container > .tabs-content > .tab-content > *,
+			.option-container > .tabs-content > .tab-content-active > * {
+				width: 100%;
+			}
+
+			.option-container > .tabs-content > .tab-content {
+				display: none;
+				height: calc(100% - 1px);
+				pointer-events: auto;
+			}
+
+			.option-container > .tabs-content > .tab-content-active {
+				display: block;
+				height: calc(100% - 1px);
+				pointer-events: auto;
+			}
+
+			.option-container > .tabs-content > * > select,
+			.option-container > .tabs-content > * > textarea {
+				height: 100%;
+				background-color: #999999;
+				color: #000000;
+				border: 0px none #000000;
+			}
+
+			.option-container > .tabs-content > * > textarea {
+				padding-right: 7px;
+				padding-bottom: 1px;
+				padding-left: 3px;
+				width: calc(400px - 11px) !important;
+				height: calc(100% - 1px) !important;
+				font-family: trebuchet, helvetica, arial;
+				white-space: pre;
+				overflow-y: scroll;
+				resize: none;
+			}
+
+			.option-container > .tabs-content > * > input[type=checkbox] {
+				position: relative;
+				top: 1px;
+				width: 13px;
+			}
+
+			.option-container > .tabs-content > * > select {
+				max-height: calc(100% - 50px); /* containerHeight - otherElementsHeight */
+				font-family: trebuchet, helvetica, arial;
+				font-size: 17px;
+			}
+
+			.option-container > .tabs-content > * > label {
+				height: 21px;
+			}
+
+			.option-container > .tabs-content > * > hr {
+				margin-top: 4px;
+				margin-bottom: 4px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="contentContainer">
+			<div class="video-container">
+				<video id="videoPlayer" controls></video>
+			</div>
+			<div id="optionContainer" class="option-container option-container-open">
+				<div class="tabs">
+					<input id="tabsAddList" type="button" value="Add List" for="tabsContentAddList" class="tab-active" /><input id="tabsPlaylist" type="button" value="Playlist" for="tabsContentPlaylist" class="tab" />
+				</div>
+
+				<div class="tabs-content">
+					<div id="tabsContentAddList" class="tab-content-active">
+						<textarea id="addList" class="tab"></textarea>
+					</div>
+					<div id="tabsContentPlaylist" class="tab-content">
+						<input id="autoclose" type="checkbox" /> <label for="autoclose">Keep Playlist Open</label><br />
+						<input id="autoplay" type="checkbox" /> <label for="autoplay">Autoplay</label>
+						<hr />
+
+						<select id="videoSelect" size="2"></select>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			"use strict";
+
+			let timeoutID = -1;
+
+			window.onload = function() {
+				// Add event listeners
+				document.getElementById("contentContainer").addEventListener("mouseover", slideOption);
+				document.getElementById("contentContainer").addEventListener("mouseout", slideOption);
+				document.getElementById("tabsAddList").addEventListener("click", onTabClick);
+				document.getElementById("tabsPlaylist").addEventListener("click", onTabClick);
+				document.getElementById("videoSelect").addEventListener("change", videoPlay);
+				document.getElementById("videoPlayer").addEventListener("ended", videoEnded);
+
+				document.getElementById("addList").focus();
+				document.getElementById("autoclose").setAttribute("checked", "checked");
+			}
+
+			function slideOption(event) {
+				if (document.getElementById("autoclose").checked) {
+					return;
+				}
+
+				switch (event.type) {
+					case "mouseout":
+						timeoutID = setTimeout(function() {
+							document.getElementById("optionContainer").className = "option-container option-container-close";
+						}, 1);
+						break;
+					case "mouseover":
+						if (timeoutID > -1) {
+							clearTimeout(timeoutID);
+							timeoutID = -1;
+							document.getElementById("optionContainer").className = "option-container option-container-open";
+						}
+						break;
+				}
+			}
+
+			function onTabClick(event) {
+				document.getElementsByClassName("tab-active")[0].className = "tab";
+				document.getElementById(event.originalTarget.id).className = "tab-active";
+
+				document.getElementsByClassName("tab-content-active")[0].className = "tab-content";
+				document.getElementById(event.originalTarget.attributes.for.value).className = "tab-content-active";
+
+				// Add files to playlist
+				if (event.originalTarget.attributes.for.value == "tabsContentPlaylist") {
+					addToPlayList();
+				}
+			}
+
+			function addToPlayList() {
+				let videoSelect = document.getElementById("videoSelect");
+				let currentFilename = null;
+
+				// Cache filename if selected
+				if (videoSelect.selectedIndex > -1) {
+					currentFilename = videoSelect.options[videoSelect.selectedIndex].value;
+				}
+
+				videoSelect.innerHTML = "";
+
+				document.getElementById("addList").value.split("\n").forEach(function(filename) {
+					if (filename.trim() == "") {
+						return; // continue
+					}
+
+					let option = document.createElement("option");
+					option.value = filename;
+					option.innerHTML = filename;
+					if ((currentFilename != null) && (currentFilename == filename)) { option.selected = "selected"; }
+
+					videoSelect.appendChild(option);
+				});
+			}
+
+			function videoPlay(event) {
+				let videoSelect = document.getElementById("videoSelect");
+				let filename = videoSelect.options[videoSelect.selectedIndex].value;
+				let fileExtension = filename.substring(filename.lastIndexOf(".") + 1, filename.length);
+
+				let videoSource = document.createElement("source");
+				videoSource.setAttribute("src", filename);
+
+				// Add type attribute if file extension exist
+				if (filename != fileExtension) {
+					videoSource.setAttribute("type", "video/" + fileExtension);
+				}
+
+				let videoPlayer = document.getElementById("videoPlayer");
+				videoPlayer.pause();
+				videoPlayer.innerHTML = "";
+				videoPlayer.appendChild(videoSource);
+				videoPlayer.load();
+				videoPlayer.play();
+			}
+
+			function videoEnded(event) {
+				if (document.getElementById("autoplay").checked) {
+					let videoSelect = document.getElementById("videoSelect");
+					let currentSelectedIndex = videoSelect.selectedIndex;
+
+					if (currentSelectedIndex >= (document.getElementById("videoSelect").length - 1)) {
+						currentSelectedIndex = 0;
+					}
+					else {
+						currentSelectedIndex++;
+					}
+
+					videoSelect.selectedIndex = -1; // Remove current selection
+					videoSelect.selectedIndex = currentSelectedIndex; // Auto select new selection
+
+					videoPlay(null);
+				}
+			}
+		</script>
+	</body>
+</html>
