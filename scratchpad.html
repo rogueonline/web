@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style type="text/css">
+			body {
+				margin: 0px 0px 0px 0px;
+				background-color: #000000;
+				font-family: "courier new";
+			}
+
+			div, textarea {
+				font-family: inherit;
+			}
+
+			textarea {
+				width: 100%;
+				height: 100%;
+				max-height: calc(100% - 12px);
+				margin: 0px 0px 0px 0px;
+				padding: 5px 0px 5px 0px;
+				background-color: inherit;
+				color: #BBBBBB;
+				border: none;
+				resize: none;
+				tab-size: 4;
+				-moz-tab-size: 4;
+			}
+
+			#container {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background-color: inherit;
+				color: #BBBBBB;
+			}
+
+			#line-number-container {
+				width: 61px;
+				height: 100%;
+				padding-right: 5px;
+				border-right: solid 1px #BBBBBB;
+				display: inline-block;
+			}
+
+			#lineNumber {
+				text-align: right;
+				overflow-y: hidden;
+				cursor: default;
+			}
+
+			#text-area-container {
+				position: absolute;
+				width: calc(100% - 72px);
+				height: 100%;
+				padding-left: 5px;
+				display: inline-block;
+			}
+
+			#textArea {
+				overflow-y: scroll;
+			}
+
+			.showScroll-x {
+				overflow-x: scroll;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="line-number-container">
+				<textarea id="lineNumber"></textarea>
+			</div>
+			<div id="text-area-container">
+				<textarea id="textArea" wrap="off"></textarea>
+			</div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		"use strict";
+
+		const LINE_BREAK = "\n";
+
+		let isRelativeNumber = true;
+
+		window.onload = function() {
+			window.addEventListener("resize", doInput);
+
+			document.getElementById("lineNumber").addEventListener("focus", doFocus);
+			document.getElementById("lineNumber").addEventListener("dblclick", doDblclick);
+
+			document.getElementById("textArea").addEventListener("input", doInput);
+			document.getElementById("textArea").addEventListener("scroll", doScroll);
+			document.getElementById("textArea").addEventListener("keypress", doKeypress);
+			document.getElementById("textArea").addEventListener("click", doClick);
+			document.getElementById("textArea").focus();
+
+			doInput();
+		}
+
+		function doFocus() {
+			let lineNumber = document.getElementById("lineNumber");
+			let textArea = document.getElementById("textArea");
+			let textAreaContent = textArea.value.split(LINE_BREAK);
+
+			// Remove array indexes 1 row above '>' to last row
+			textAreaContent.splice((lineNumber.value.substring(0, lineNumber.selectionStart).split(LINE_BREAK).length - 1), textAreaContent.length);
+
+			// Add 1 character so cursor is at beginning of line
+			textArea.selectionStart = textAreaContent.toString().length + 1;
+			textArea.selectionEnd = textAreaContent.toString().length + 1;
+			textArea.focus();
+
+			doInput();
+		}
+
+		function doDblclick() {
+			isRelativeNumber = !isRelativeNumber;
+			doInput();
+		}
+
+		function doInput() {
+			let element = document.getElementById("textArea");
+			updateLineNumber(element.value.substring(0, element.selectionStart).split(LINE_BREAK).length);
+			doScroll();
+
+			// Show horizontal scrollbar on line numbers
+			if (element.scrollWidth > element.clientWidth) {
+				document.getElementById("lineNumber").className = "showScroll-x";
+			}
+			else {
+				document.getElementById("lineNumber").className = "";
+			}
+		}
+
+		function doScroll() {
+			document.getElementById("lineNumber").scrollTop = document.getElementById("textArea").scrollTop;
+		}
+
+		function doKeypress(event) {
+			let element = document.getElementById("textArea");
+
+			if (event.ctrlKey) { // Control
+				let scrollAmount = 10;
+
+				// Scroll line number as text area scrolls
+				switch (event.keyCode) {
+					case 38: // Up arrow
+						element.scrollTop -= scrollAmount;
+						event.preventDefault();
+						break;
+					case 40: // Down arrow
+						element.scrollTop += scrollAmount;
+						event.preventDefault();
+						break;
+					case 36: // Home arrow
+						updateLineNumber(1);
+						break;
+					case 35: // End arrow
+						updateLineNumber(element.value.split(LINE_BREAK).length);
+						break;
+				}
+			}
+			else if (event.keyCode == 38) { // Up arrow
+				let currentLine = element.value.substring(0, element.selectionStart).split(LINE_BREAK).length - 1;
+				if (currentLine > 0) {
+					updateLineNumber(currentLine);
+				}
+			}
+			else if (event.keyCode == 40) { // Down arrow
+				let currentLine = element.value.substring(0, element.selectionStart).split(LINE_BREAK).length + 1;
+				if (currentLine <= element.value.split(LINE_BREAK).length) {
+					updateLineNumber(currentLine);
+				}
+			}
+			else if (event.keyCode == 37) { // Left arrow
+				if (element.selectionStart > 0) {
+					let currentLine = element.value.substring(0, element.selectionStart).split(LINE_BREAK).length;
+					if (element.value.substring(element.selectionStart, (element.selectionStart - 1)) == LINE_BREAK) {
+						currentLine--;
+					}
+					updateLineNumber(currentLine);
+				}
+			}
+			else if (event.keyCode == 39) { // Right arrow
+				if (element.selectionStart < element.value.length) {
+					let currentLine = element.value.substring(0, element.selectionStart).split(LINE_BREAK).length;
+					if (element.value.substring(element.selectionStart, (element.selectionStart + 1)) == LINE_BREAK) {
+						currentLine++;
+					}
+					updateLineNumber(currentLine);
+				}
+			}
+		}
+
+		function doClick() {
+			let element = document.getElementById("textArea");
+			updateLineNumber(element.value.substring(0, element.selectionStart).split(LINE_BREAK).length);
+		}
+
+		function updateLineNumber(currentLine) {
+			let values = document.getElementById("textArea").value.split(LINE_BREAK);
+			let lineNumber = new Array();
+
+			let isAbove = true;
+			let relativeNumber = currentLine;
+			let i = 0;
+			values.forEach(function(value) {
+				if (isRelativeNumber) { // Relative line number
+					if ((i + 1) == currentLine) {
+						lineNumber[i] = ">" + (i + 1);
+						isAbove = false;
+					}
+					else if (isAbove) { // Above current line
+						lineNumber[i] = relativeNumber-- - 1;
+					}
+					else { // Below current line
+						lineNumber[i] = relativeNumber++;
+					}
+				}
+				else { // Sequential line number
+					if ((i + 1) == currentLine) {
+						lineNumber[i] = ">" + (i + 1);
+					}
+					else {
+						lineNumber[i] = (i + 1);
+					}
+				}
+
+				i++;
+			});
+
+			document.getElementById("lineNumber").value = lineNumber.join(LINE_BREAK);
+		}
+	</script>
+</html>
