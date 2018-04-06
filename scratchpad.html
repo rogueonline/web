@@ -177,7 +177,7 @@
 
 				textArea.value = "";
 				fileReader.onload = function(event) {
-					textArea.value += event.target.result;
+					textArea.value = event.target.result;
 
 					// Move cursor to top
 					textArea.selectionStart = 0;
@@ -262,6 +262,9 @@
 						updateLineNumber(element.value.split(LINE_BREAK).length);
 						break;
 				}
+			}
+			else if (event.keyCode == 27) { // Escape
+				hideContextMenu();
 			}
 			else if (event.keyCode == 38) { // Up arrow
 				let currentLine = element.value.substring(0, element.selectionStart).split(LINE_BREAK).length - 1;
