@@ -4,8 +4,8 @@
 
 \
 **scratchpad.html** to keep temporary notes
-* double click line numbers to toggle relative and sequential line numbers
+* right click for context menu
 * set default to sequential line numbers
 ```javascript
-let isRelativeNumber = false;
+<input id="is-relative-number" type="checkbox" checked="**true**" />
 ```

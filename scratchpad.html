@@ -27,12 +27,24 @@
 				-moz-tab-size: 4;
 			}
 
+			input[type=checkbox] {
+				position: relative;
+				top: 2px;
+				margin-right: 4px;
+				cursor: inherit;
+			}
+
+			label {
+				cursor: inherit;
+			}
+
 			#container {
 				position: absolute;
 				width: 100%;
 				height: 100%;
 				background-color: inherit;
 				color: #BBBBBB;
+				overflow: hidden;
 			}
 
 			#line-number-container {
@@ -43,7 +55,7 @@
 				display: inline-block;
 			}
 
-			#lineNumber {
+			#line-number {
 				text-align: right;
 				overflow-y: hidden;
 				cursor: default;
@@ -57,12 +69,44 @@
 				display: inline-block;
 			}
 
-			#textArea {
+			#text-area {
 				overflow-y: scroll;
 			}
 
-			.showScroll-x {
+			.show-scroll-x {
 				overflow-x: scroll;
+			}
+
+			#context-menu {
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				background-color: #BBBBBB;
+				color: #000000;
+				padding: 5px 10px 5px 10px;
+				border: groove 1px #000000;
+				cursor: pointer;
+			}
+
+			.context-menu-hide {
+				display: none;
+			}
+
+			.context-menu-show {
+				display: inline-block;
+			}
+
+			.context-menu-item:hover {
+				background-color: #333333;
+				color: #DDDDDD;
+			}
+
+			.context-menu-item {
+				padding: 5px 7px 5px 5px;
+			}
+
+			.context-menu-separator {
+				margin: 2px 0px 2px 0px;
 			}
 		</style>
 	</head>
@@ -70,10 +114,16 @@
 	<body>
 		<div id="container">
 			<div id="line-number-container">
-				<textarea id="lineNumber"></textarea>
+				<textarea id="line-number"></textarea>
 			</div>
 			<div id="text-area-container">
-				<textarea id="textArea" wrap="off"></textarea>
+				<textarea id="text-area" wrap="off"></textarea>
+			</div>
+			<div id="context-menu">
+				<div id="open-menu-item" class="context-menu-item"><input type="checkbox" style="opacity: 0;" /> <label>Open File...</label></div>
+				<div id="save-menu-item" class="context-menu-item"><input type="checkbox" style="opacity: 0;" /> <label>Save As...</label></div>
+				<hr class="context-menu-separator" />
+				<div id="relative-number-menu-item" class="context-menu-item"><input id="is-relative-number" type="checkbox" checked="true" /> <label for="is-relative-number">Relative Line Number</label></div>
 			</div>
 		</div>
 	</body>
@@ -83,26 +133,80 @@
 
 		const LINE_BREAK = "\n";
 
-		let isRelativeNumber = true;
-
 		window.onload = function() {
 			window.addEventListener("resize", doInput);
 
-			document.getElementById("lineNumber").addEventListener("focus", doFocus);
-			document.getElementById("lineNumber").addEventListener("dblclick", doDblclick);
+			document.getElementById("context-menu").className = "context-menu-hide";
 
-			document.getElementById("textArea").addEventListener("input", doInput);
-			document.getElementById("textArea").addEventListener("scroll", doScroll);
-			document.getElementById("textArea").addEventListener("keypress", doKeypress);
-			document.getElementById("textArea").addEventListener("click", doClick);
-			document.getElementById("textArea").focus();
+			document.getElementById("open-menu-item").addEventListener("click", doOpen);
+			document.getElementById("save-menu-item").addEventListener("click", doSave);
+			document.getElementById("is-relative-number").addEventListener("change", doInput);
+			document.getElementById("line-number").addEventListener("contextmenu", doContextmenu);
+			document.getElementById("line-number").addEventListener("click", doLineNumberClick);
+			document.getElementById("text-area").addEventListener("input", doInput);
+			document.getElementById("text-area").addEventListener("scroll", doScroll);
+			document.getElementById("text-area").addEventListener("keypress", doKeypress);
+			document.getElementById("text-area").addEventListener("click", doTextAreaClick);
+			document.getElementById("text-area").focus();
 
 			doInput();
 		}
 
-		function doFocus() {
-			let lineNumber = document.getElementById("lineNumber");
-			let textArea = document.getElementById("textArea");
+		function doContextmenu(event) {
+			event.preventDefault();
+
+			let element = document.getElementById("context-menu");
+
+			element.style.top = event.clientY + "px";
+			element.style.left = event.clientX + "px";
+			element.className = "context-menu-show";
+
+			document.getElementById("text-area").focus();
+		}
+
+		function hideContextMenu() {
+			document.getElementById("context-menu").className = "context-menu-hide";
+		}
+
+		function doOpen() {
+			let fileInput = document.createElement("input");
+			fileInput.setAttribute("type", "file");
+			fileInput.onchange = function() {
+				let textArea = document.getElementById("text-area");
+				let fileReader = new FileReader();
+
+				textArea.value = "";
+				fileReader.onload = function(event) {
+					textArea.value += event.target.result;
+
+					// Move cursor to top
+					textArea.selectionStart = 0;
+					textArea.selectionEnd = 0;
+					doTextAreaClick();
+					textArea.focus();
+				}
+				fileReader.readAsText(fileInput.files[0], "utf-8");
+			}
+			fileInput.click();
+			hideContextMenu();
+		}
+
+		function doSave() {
+			let file = document.createElement("a");
+
+			file.download = "textarea.txt";
+			file.href = window.URL.createObjectURL(new Blob([document.getElementById("text-area").value], {type:"text/plain", ending:"native"}));
+			file.style.display = "none";
+			file.onclick = function() { document.body.removeChild(this); };
+
+			document.body.appendChild(file);
+			file.click();
+			hideContextMenu();
+		}
+
+		function doLineNumberClick(event) {
+			let lineNumber = document.getElementById("line-number");
+			let textArea = document.getElementById("text-area");
 			let textAreaContent = textArea.value.split(LINE_BREAK);
 
 			// Remove array indexes 1 row above '>' to last row
@@ -114,33 +218,29 @@
 			textArea.focus();
 
 			doInput();
-		}
-
-		function doDblclick() {
-			isRelativeNumber = !isRelativeNumber;
-			doInput();
+			hideContextMenu();
 		}
 
 		function doInput() {
-			let element = document.getElementById("textArea");
+			let element = document.getElementById("text-area");
 			updateLineNumber(element.value.substring(0, element.selectionStart).split(LINE_BREAK).length);
 			doScroll();
 
 			// Show horizontal scrollbar on line numbers
 			if (element.scrollWidth > element.clientWidth) {
-				document.getElementById("lineNumber").className = "showScroll-x";
+				document.getElementById("line-number").className = "show-scroll-x";
 			}
 			else {
-				document.getElementById("lineNumber").className = "";
+				document.getElementById("line-number").className = "";
 			}
 		}
 
 		function doScroll() {
-			document.getElementById("lineNumber").scrollTop = document.getElementById("textArea").scrollTop;
+			document.getElementById("line-number").scrollTop = document.getElementById("text-area").scrollTop;
 		}
 
 		function doKeypress(event) {
-			let element = document.getElementById("textArea");
+			let element = document.getElementById("text-area");
 
 			if (event.ctrlKey) { // Control
 				let scrollAmount = 10;
@@ -195,20 +295,21 @@
 			}
 		}
 
-		function doClick() {
-			let element = document.getElementById("textArea");
+		function doTextAreaClick() {
+			let element = document.getElementById("text-area");
 			updateLineNumber(element.value.substring(0, element.selectionStart).split(LINE_BREAK).length);
+			hideContextMenu();
 		}
 
 		function updateLineNumber(currentLine) {
-			let values = document.getElementById("textArea").value.split(LINE_BREAK);
+			let values = document.getElementById("text-area").value.split(LINE_BREAK);
 			let lineNumber = new Array();
 
 			let isAbove = true;
 			let relativeNumber = currentLine;
 			let i = 0;
 			values.forEach(function(value) {
-				if (isRelativeNumber) { // Relative line number
+				if (document.getElementById("is-relative-number").checked) {
 					if ((i + 1) == currentLine) {
 						lineNumber[i] = ">" + (i + 1);
 						isAbove = false;
@@ -232,7 +333,7 @@
 				i++;
 			});
 
-			document.getElementById("lineNumber").value = lineNumber.join(LINE_BREAK);
+			document.getElementById("line-number").value = lineNumber.join(LINE_BREAK);
 		}
 	</script>
 </html>
