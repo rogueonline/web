@@ -13,3 +13,4 @@
 ```javascript
 <input id="is-relative-number" type="checkbox" checked="true" />
 ```
+* drag file into textarea
