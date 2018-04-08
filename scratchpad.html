@@ -120,6 +120,7 @@
 				<textarea id="text-area" wrap="off"></textarea>
 			</div>
 			<div id="context-menu">
+				<div id="new-menu-item" class="context-menu-item"><input type="checkbox" style="opacity: 0;" /><label> New File...</label></div>
 				<div id="open-menu-item" class="context-menu-item"><input type="checkbox" style="opacity: 0;" /><label> Open File...</label></div>
 				<div id="save-menu-item" class="context-menu-item"><input type="checkbox" style="opacity: 0;" /><label> Save As...</label></div>
 				<hr class="context-menu-separator" />
@@ -132,21 +133,25 @@
 		"use strict";
 
 		const LINE_BREAK = "\n";
+		const FILE_TYPE = "utf-8";
 
 		window.onload = function() {
 			window.addEventListener("resize", doInput);
 
 			document.getElementById("context-menu").className = "context-menu-hide";
 
+			document.getElementById("new-menu-item").addEventListener("click", doNew);
 			document.getElementById("open-menu-item").addEventListener("click", doOpen);
 			document.getElementById("save-menu-item").addEventListener("click", doSave);
 			document.getElementById("is-relative-number").addEventListener("change", doInput);
 			document.getElementById("line-number").addEventListener("contextmenu", doContextmenu);
 			document.getElementById("line-number").addEventListener("click", doLineNumberClick);
+			document.getElementById("line-number").addEventListener("drop", function(event) { event.preventDefault(); });
 			document.getElementById("text-area").addEventListener("input", doInput);
 			document.getElementById("text-area").addEventListener("scroll", doScroll);
 			document.getElementById("text-area").addEventListener("keypress", doKeypress);
 			document.getElementById("text-area").addEventListener("click", doTextAreaClick);
+			document.getElementById("text-area").addEventListener("drop", doDrop);
 			document.getElementById("text-area").focus();
 
 			doInput();
@@ -168,27 +173,42 @@
 			document.getElementById("context-menu").className = "context-menu-hide";
 		}
 
+		function doNew() {
+			let textArea = document.getElementById("text-area");
+
+			textArea.value = "";
+			doTextAreaClick();
+			doInput();
+			textArea.focus();
+		}
+
 		function doOpen() {
 			let fileInput = document.createElement("input");
 			fileInput.setAttribute("type", "file");
 			fileInput.onchange = function() {
-				let textArea = document.getElementById("text-area");
 				let fileReader = new FileReader();
-
-				textArea.value = "";
-				fileReader.onload = function(event) {
-					textArea.value = event.target.result;
-
-					// Move cursor to top
-					textArea.selectionStart = 0;
-					textArea.selectionEnd = 0;
-					doTextAreaClick();
-					textArea.focus();
-				}
-				fileReader.readAsText(fileInput.files[0], "utf-8");
+				fileReader.onload = doFileReader;
+				fileReader.readAsText(fileInput.files[0], FILE_TYPE);
 			}
 			fileInput.click();
 			hideContextMenu();
+		}
+		function doDrop(event) {
+			let fileReader = new FileReader();
+			fileReader.onload = doFileReader;
+			fileReader.readAsText(event.dataTransfer.files[0], FILE_TYPE);
+		}
+
+		function doFileReader(event) {
+			let textArea = document.getElementById("text-area");
+			textArea.value = event.target.result;
+
+			// Move cursor to top
+			textArea.selectionStart = 0;
+			textArea.selectionEnd = 0;
+			doTextAreaClick();
+			doInput();
+			textArea.focus();
 		}
 
 		function doSave() {
