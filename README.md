@@ -4,8 +4,12 @@
 
 \
 **scratchpad.html** to keep temporary notes
-* right click for context menu
-* set default to sequential line numbers by changing checked value to true
+* right click on line numbers for context menu
+  * `New File...` start new blank page
+  * `Open File...` open text file
+  * `Save As...` save text file
+  * `Relative Line Number` uncheck for sequential line numbers
+    * set default to sequential line numbers by changing checkbox checked value to true
 ```javascript
 <input id="is-relative-number" type="checkbox" checked="true" />
 ```
