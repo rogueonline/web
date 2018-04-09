@@ -47,7 +47,6 @@ var String = {
 		for (var i = 0; i < string.length; i++) {
 			var charCode = string.charCodeAt(i);
 			hashCode = hashCode * 31 + charCode;
-//			hashCode = ((hashCode << 5) - hashCode) + charCode;
 			hashCode |= 0; // Convert to 32bit integer
 		}
 
