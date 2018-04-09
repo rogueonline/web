@@ -8,8 +8,8 @@
 
 var elementsByName = document.getElementsByAttributeName("customAttribute");
 elementsByName.forEach((value, i) => {
-   `document.write(value.getAttribute("id"));
-   `document.write("<br />");
+   document.write(value.getAttribute("id"));
+   document.write("<br />");
 });
 ```
 
@@ -36,38 +36,15 @@ elementsByValue.forEach((value, i) => {
   * `Relative Line Number` uncheck for sequential line numbers
 * drag file into textarea to open
 * set default to sequential line numbers by changing checkbox checked value to true
-```javascript
-<input id="is-relative-number" type="checkbox" checked="true" />
-```
+  * `<input id="is-relative-number" type="checkbox" checked="true" />`
 
 \
 **string.js** basic string utility
 * usage
-```javascript
-String.trimStart(" sample ")
-```
-"sample "
-```javascript
-String.trimEnd(" sample ")
-```
-" sample"
-```javascript
-String.replace("ABC xyz", "ABC", "123")
-```
-"123 xyz"
-```javascript
-String.replaceIgnoreCase("ABC xyz", "aBc", "123")
-```
-"123 xyz"
-```javascript
-String.replaceAll("ABC xyz ABC", "ABC", "123")
-```
-"123 xyz 123"
-```javascript
-String.replaceAllIgnoreCase("ABC xyz ABC", "aBc", "123")
-```
-"123 xyz 123"
-```javascript
-String.hashCode("ABC xyz")
-```
-"489330501"
+  * `String.trimStart(" sample ")` = "sample "
+  * `String.trimEnd(" sample ")` = " sample"
+  * `String.replace("ABC xyz", "ABC", "123")` = "123 xyz"
+  * `String.replaceIgnoreCase("ABC xyz", "aBc", "123")` = "123 xyz"
+  * `String.replaceAll("ABC xyz ABC", "ABC", "123")` = "123 xyz 123"
+  * `String.replaceAllIgnoreCase("ABC xyz ABC", "aBc", "123")` = "123 xyz 123"
+  * `String.hashCode("ABC xyz")`  = "489330501"
