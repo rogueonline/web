@@ -17,7 +17,7 @@ elementsByName.forEach((value, i) => {
 <input id="textField1" type="text" value="value 1" customAttribute="custom value 1" /><br />
 <input id="textField2" type="text" value="value 2" customAttribute="custom value 2" /><br />
 
-var elementsByValue = document.getElementsByAttributeValue("custom attribute value 2");
+var elementsByValue = document.getElementsByAttributeValue("custom value 2");
 elementsByValue.forEach((value, i) => {
    document.write(value.getAttribute("id"));
    document.write("<br />");
