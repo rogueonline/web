@@ -27,6 +27,7 @@
 				resize: none;
 				tab-size: 4;
 				-moz-tab-size: 4;
+				white-space: pre;
 			}
 
 			input[type=checkbox] {
@@ -119,7 +120,7 @@
 				<textarea id="line-number"></textarea>
 			</div>
 			<div id="text-area-container">
-				<textarea id="text-area" wrap="off"></textarea>
+				<textarea id="text-area"></textarea>
 			</div>
 			<div id="context-menu">
 				<div id="new-menu-item" class="context-menu-item"><input type="checkbox" style="opacity: 0;" /><label> New File</label></div>
@@ -336,22 +337,22 @@
 			values.forEach(function(value) {
 				if (document.getElementById("is-relative-number").checked) {
 					if ((i + 1) == currentLine) {
-						lineNumber[i] = ">" + (i + 1);
+						lineNumber.push(">" + (i + 1));
 						isAbove = false;
 					}
 					else if (isAbove) { // Above current line
-						lineNumber[i] = relativeNumber-- - 1;
+						lineNumber.push(relativeNumber-- - 1);
 					}
 					else { // Below current line
-						lineNumber[i] = relativeNumber++;
+						lineNumber.push(relativeNumber++);
 					}
 				}
 				else { // Sequential line number
 					if ((i + 1) == currentLine) {
-						lineNumber[i] = ">" + (i + 1);
+						lineNumber.push(">" + (i + 1));
 					}
 					else {
-						lineNumber[i] = (i + 1);
+						lineNumber.push(i + 1);
 					}
 				}
 
