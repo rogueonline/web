@@ -34,6 +34,14 @@ if ((Object.prototype.getElementsByAttributeName == undefined) ||
 			return results;
 		};
 
+		let addClass = function($this, value) {
+			$this.classList.add(value);
+		};
+
+		let removeClass = function($this, value) {
+			$this.className = $this.className.replace(value, "");
+		};
+
 		return {
 			/**
 			 * document.getElementsByAttributeName("attribute-name");
@@ -47,10 +55,26 @@ if ((Object.prototype.getElementsByAttributeName == undefined) ||
 			 */
 			getElementsByAttributeValue: function(value) {
 				return getElementsByAttributeValue(this, value);
+			},
+
+			/**
+			 * document.getElementById("element-id").addClass("class-name");
+			 */
+			addClass: function(value) {
+				return addClass(this, value);
+			},
+
+			/**
+			 * document.getElementById("element-id").removeClass("class-name");
+			 */
+			removeClass: function(value) {
+				return removeClass(this, value);
 			}
 		};
 	})();
 
 	Object.prototype.getElementsByAttributeName = elementUtil.getElementsByAttributeName;
 	Object.prototype.getElementsByAttributeValue = elementUtil.getElementsByAttributeValue;
+	Object.prototype.addClass = elementUtil.addClass;
+	Object.prototype.removeClass = elementUtil.removeClass;
 }
