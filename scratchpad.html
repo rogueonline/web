@@ -273,19 +273,21 @@
 
 		function doWrapText() {
 			let element = document.getElementById("text-area");
+			let lineNumber = document.getElementById("line-number");
+
 			if (document.getElementById("is-wrap-text").checked) {
 				element.className = element.className.replace(/white-space-no-wrap/, "");
 				element.classList.add("white-space-wrap");
 
-				document.getElementById("line-number").className = document.getElementById("line-number").className.replace(/white-space-no-wrap/, "");
-				document.getElementById("line-number").classList.add("white-space-wrap");
+				lineNumber.className = lineNumber.className.replace(/white-space-no-wrap/, "");
+				lineNumber.classList.add("white-space-wrap");
 			}
 			else {
 				element.className = element.className.replace(/white-space-wrap/, "");
 				element.classList.add("white-space-no-wrap");
 
-				document.getElementById("line-number").className = document.getElementById("line-number").className.replace(/white-space-wrap/, "");
-				document.getElementById("line-number").classList.add("white-space-no-wrap");
+				lineNumber.className = lineNumber.className.replace(/white-space-wrap/, "");
+				lineNumber.classList.add("white-space-no-wrap");
 			}
 
 			doInput();
@@ -369,32 +371,30 @@
 			let relativeNumber = currentLine;
 			let i = 0;
 			values.forEach(function(value) {
-				if (document.getElementById("is-relative-number").checked) {
+				if ((document.getElementById("is-relative-number").checked) &&
+				    (!document.getElementById("is-wrap-text").checked)) { // Do not use relative number
 					if ((i + 1) == currentLine) {
 						lineNumber.push(">" + (i + 1));
 						isAbove = false;
 					}
 					else if (isAbove) { // Above current line
-						lineNumber.push(relativeNumber-- - 1);
+						lineNumber.push((relativeNumber-- - 1) + "");
 					}
 					else { // Below current line
-						lineNumber.push(relativeNumber++);
+						lineNumber.push((relativeNumber++) + "");
 					}
 				}
 				else { // Sequential line number
-					if ((i + 1) == currentLine) {
+					if (((i + 1) == currentLine) &&
+					     (!document.getElementById("is-wrap-text").checked)) { // Do not use current line indicator
 						lineNumber.push(">" + (i + 1));
 					}
 					else {
-						lineNumber.push(i + 1);
+						lineNumber.push((i + 1) + "");
 					}
 				}
 
 				if (document.getElementById("is-wrap-text").checked) {
-					// Remove '>'
-					lineNumber.pop();
-					lineNumber.push(i + 1);
-
 					let clonedElement = document.getElementById("text-area").cloneNode(false);
 					clonedElement.style.paddingTop = "0px";
 					clonedElement.style.paddingBottom = "0px";

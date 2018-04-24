@@ -20,7 +20,7 @@ document.getElementById("box").addClass("css-class-to-add");
   * `Open File...` open text file
   * `Save As...` save text file
   * `Relative Line Number` uncheck for sequential line numbers
-  * `Wrap Text` check to wrap text (note: relative line numbers and current line indicator is disabled)
+  * `Wrap Text` check to wrap text (note: relative line numbers and current line indicator will be disabled)
 * drag file into textarea to open
 * set default to sequential line numbers by changing checkbox checked value to false
   * `<input id="is-relative-number" type="checkbox" checked="false" />`
