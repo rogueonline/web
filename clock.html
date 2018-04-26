@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+		<style type="text/css">
+			#clock-container {
+				width: 100px;
+				height: 100px;
+				transform: rotate(-90deg);
+				transform-origin: center;
+			}
+
+			#time-text {
+				font-family: arial;
+				transform: rotate(90deg);
+				transform-origin: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<svg id="clock-container" viewbox="0 0 100 100">
+			<circle id="hour" cx="50%" cy="50%" r="45" stroke="#003147" stroke-width="10" stroke-dasharray="" stroke-linecap="round" fill="none" />
+			<circle id="minute" cx="50%" cy="50%" r="35" stroke="#0077BB" stroke-width="10" stroke-dasharray="" stroke-linecap="round" fill="none" />
+			<circle id="second" cx="50%" cy="50%" r="25" stroke="#00bba2" stroke-width="10" stroke-dasharray="" stroke-linecap="round" fill="none" />
+			<text id="time-text" x="50%" y="50%" text-anchor="middle" stroke="#000000" stroke-width=".25" dy=".4em"></text>
+		</svg>
+		<script type="text/javascript">
+			"use strict";
+
+			let timeout = 0;
+
+			const PI = 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196442881097566593344612847564823378;
+			let circumferenceHour = 0;
+			let circumferenceMinute = 0;
+			let circumferenceSecond = 0;
+			let degreePerHour = 0;
+			let degreePerMinute = 0;
+			let degreePerSecond = 0;
+
+			window.onload = function() {
+				// Calculate circumference (2 * pi * radius)
+				circumferenceHour = 2 * PI * parseInt(document.getElementById("hour").getAttribute("r"));
+				circumferenceMinute = 2 * PI * parseInt(document.getElementById("minute").getAttribute("r"));
+				circumferenceSecond = 2 * PI * parseInt(document.getElementById("second").getAttribute("r"));
+
+				degreePerHour = circumferenceHour / 12;
+				degreePerMinute = circumferenceMinute / 60;
+				degreePerSecond = circumferenceSecond / 60;
+
+				timeout = setTimeout(tick, 0);
+			}
+
+			function tick() {
+				let date = new Date();
+				let currentHour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+				let currentMinute = date.getMinutes();
+				let currentSecond = date.getSeconds();
+
+				document.getElementById("hour").setAttribute("stroke-dasharray", (currentHour * degreePerHour) + "," + circumferenceHour);
+				document.getElementById("minute").setAttribute("stroke-dasharray", (currentMinute * degreePerMinute) + "," + circumferenceMinute);
+				document.getElementById("second").setAttribute("stroke-dasharray", (currentSecond * degreePerSecond) + "," + circumferenceSecond);
+				document.getElementById("time-text").innerHTML = (currentHour < 10 ? "0" + currentHour : currentHour) +
+				                                            "" + (currentMinute < 10 ? "0" + currentMinute : currentMinute);
+
+				timeout = setTimeout(tick, 1000);
+			}
+		</script>
+	</body>
+</html>

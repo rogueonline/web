@@ -1,5 +1,8 @@
 # web stuff
 
+**clock.html** svg clock
+
+\
 **element.util.js** utility to get elements by attribute name or attribute value
 * usage
 ```javascript
