@@ -1,6 +1,7 @@
 # web stuff
 
 **clock.html** svg clock
+![Clock Screenshot](screenshot/clock-screenshot-01.png?raw=true)
 
 \
 **element.util.js** utility to get elements by attribute name or attribute value
@@ -15,6 +16,8 @@ document.getElementById("box").addClass("css-class-to-add");
 
 \
 **player.html** movie player with playlist
+![Movie Player](screenshot/player-screenshot-01.png?raw=true "Add Movies")
+![Movie Player](screenshot/player-screenshot-02.png?raw=true "Click to Play")
 
 \
 **scratchpad.html** to keep temporary notes
@@ -24,11 +27,14 @@ document.getElementById("box").addClass("css-class-to-add");
   * `Save As...` save text file
   * `Relative Line Number` uncheck for sequential line numbers
   * `Wrap Text` check to wrap text (note: relative line numbers and current line indicator will be disabled)
+![Scratchpad](screenshot/scratchpad-screenshot-01.png?raw=true "Right Click Menu")
 * drag file into textarea to open
 * set default to sequential line numbers by changing checkbox checked value to false
   * `<input id="is-relative-number" type="checkbox" checked="false" />`
 * set default to wrap lines by changing checkbox checked value to true
   * `input id="is-wrap-text" type="checkbox" checked="true" />`
+![Scratchpad](screenshot/scratchpad-screenshot-02.png?raw=true "Relative Line Number")
+![Scratchpad](screenshot/scratchpad-screenshot-03.png?raw=true "Wrapped Text")
 
 \
 **string.js** basic string utility
