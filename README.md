@@ -1,6 +1,7 @@
 # web stuff
 
 **clock.html** svg clock
+
 ![Clock Screenshot](screenshot/clock-screenshot-01.png?raw=true)
 
 \
@@ -16,6 +17,7 @@ document.getElementById("box").addClass("css-class-to-add");
 
 \
 **player.html** movie player with playlist
+
 ![Movie Player](screenshot/player-screenshot-01.png?raw=true "Add Movies")
 ![Movie Player](screenshot/player-screenshot-02.png?raw=true "Click to Play")
 
@@ -31,9 +33,9 @@ document.getElementById("box").addClass("css-class-to-add");
 * drag file into textarea to open
 * set default to sequential line numbers by changing checkbox checked value to false
   * `<input id="is-relative-number" type="checkbox" checked="false" />`
+![Scratchpad](screenshot/scratchpad-screenshot-02.png?raw=true "Relative Line Number")
 * set default to wrap lines by changing checkbox checked value to true
   * `input id="is-wrap-text" type="checkbox" checked="true" />`
-![Scratchpad](screenshot/scratchpad-screenshot-02.png?raw=true "Relative Line Number")
 ![Scratchpad](screenshot/scratchpad-screenshot-03.png?raw=true "Wrapped Text")
 
 \
