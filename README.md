@@ -1,19 +1,12 @@
 # web stuff
 
-**clock.html** html5 svg clock
-
-time in the center is 24 hour format
-
-hour = outer ring
-
-minute = middle ring
-
-second = inner ring
-
-to resize change css width and height in `#clock-container`
-
-width: `300px;`
-
+**clock.html** html5 svg clock\
+time in the center is 24 hour format\
+hour = outer ring\
+minute = middle ring\
+second = inner ring\
+to resize change css width and height in `#clock-container`\
+width: `300px;`\
 height: `300px;`
 
 ![Clock Screenshot](screenshot/clock-screenshot-01.png?raw=true)
