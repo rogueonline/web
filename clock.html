@@ -58,7 +58,7 @@
 		<script type="text/javascript">
 			"use strict";
 
-			let timeout = 0;
+			let timeout = -1;
 			let is24HourFormat = true;
 			let showTime = 1;
 
@@ -85,7 +85,7 @@
 
 			function tick() {
 				let date = new Date();
-				let currentHour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+				let currentHour = date.getHours() >= 12 ? date.getHours() - 12 : date.getHours();
 				let currentMinute = date.getMinutes();
 				let currentSecond = date.getSeconds();
 
@@ -94,17 +94,19 @@
 				document.getElementById("minute").setAttribute("stroke-dasharray", (currentMinute * degreePerMinute) + "," + circumferenceMinute);
 				document.getElementById("second").setAttribute("stroke-dasharray", (currentSecond * degreePerSecond) + "," + circumferenceSecond);
 
-				switch(showTime) {
+				switch (showTime) {
 					case 1:
-						// Set center
-						if (is24HourFormat) {
-							// Add leading 0
-							currentHour = (date.getHours() > 10) ? date.getHours() : "0" + currentHour;
+						if (!is24HourFormat) {
+							document.getElementById("time-text").innerHTML = (currentHour < 1 ? "12" : currentHour) +
+							                                                 ":" +
+							                                                 (currentMinute < 10 ? "0" + currentMinute : currentMinute); // Add leading 0
 						}
-
-						document.getElementById("time-text").innerHTML = currentHour +
-						                                                (is24HourFormat ? "" : ":") + // Show ':' if 12 format
-						                                                (currentMinute < 10 ? "0" + currentMinute : currentMinute); // Add leading 0
+						else {
+							currentHour = date.getHours();
+							document.getElementById("time-text").innerHTML = (currentHour < 10 ? "0" + currentHour : currentHour) +
+							                                                 "" +
+							                                                 (currentMinute < 10 ? "0" + currentMinute : currentMinute); // Add leading 0
+						}
 
 						break;
 				}
