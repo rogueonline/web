@@ -7,6 +7,8 @@
 * time in the center defaults to 24 hour format
   * set default to 12 hour format\
 change flag to false `let is24HourFormat = false`
+  * disable time in center\
+change flag to 0 `let showTime = 0`
 * to resize change css width and height in `#clock-container`
   * `width: 300px`\
 `height: 300px`
