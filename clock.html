@@ -4,11 +4,14 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
 		<style type="text/css">
+			.rotate {
+				transform: rotate(-90deg);
+				transform-origin: center;
+			}
+
 			#clock-container {
 				width: 100px;
 				height: 100px;
-				transform: rotate(-90deg);
-				transform-origin: center;
 			}
 
 			#time-text {
@@ -17,21 +20,94 @@
 				transform: rotate(90deg);
 				transform-origin: center;
 			}
+
+			.hour-tick-12 {
+				transform: rotate(0deg);
+				transform-origin: center;
+			}
+
+			.hour-tick-01 {
+				transform: rotate(30deg);
+				transform-origin: center;
+			}
+
+			.hour-tick-02 {
+				transform: rotate(60deg);
+				transform-origin: center;
+			}
+
+			.hour-tick-03 {
+				transform: rotate(90deg);
+				transform-origin: center;
+			}
+
+			.hour-tick-04 {
+				transform: rotate(120deg);
+				transform-origin: center;
+			}
+
+			.hour-tick-05 {
+				transform: rotate(150deg);
+				transform-origin: center;
+			}
+
+			.hour-tick-06 {
+				transform: rotate(180deg);
+				transform-origin: center;
+			}
+
+			.hour-tick-07 {
+				transform: rotate(210deg);
+				transform-origin: center;
+			}
+
+			.hour-tick-08 {
+				transform: rotate(240deg);
+				transform-origin: center;
+			}
+
+			.hour-tick-09 {
+				transform: rotate(270deg);
+				transform-origin: center;
+			}
+
+			.hour-tick-10 {
+				transform: rotate(300deg);
+				transform-origin: center;
+			}
+
+			.hour-tick-11 {
+				transform: rotate(330deg);
+				transform-origin: center;
+			}
 		</style>
 	</head>
 
 	<body>
-		<svg id="clock-container" viewbox="0 0 100 100">
+		<svg id="clock-container" viewbox="0 0 100 100" class="rotate">
 			<circle id="hour" cx="50%" cy="50%" r="45" stroke="#003147" stroke-width="10" stroke-dasharray="0" stroke-linecap="round" fill="none" />
 			<circle id="minute" cx="50%" cy="50%" r="35" stroke="#0077BB" stroke-width="10" stroke-dasharray="0" stroke-linecap="round" fill="none" />
 			<circle id="second" cx="50%" cy="50%" r="25" stroke="#00bba2" stroke-width="10" stroke-dasharray="0" stroke-linecap="round" fill="none" />
 			<text id="time-text" x="50%" y="50%" text-anchor="middle" stroke="#000000" stroke-width=".25" dy=".4em"></text>
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-12" /> <!-- 12 -->
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-01" /> <!-- 1 -->
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-02" /> <!-- 2 -->
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-03" /> <!-- 3 -->
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-04" /> <!-- 4 -->
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-05" /> <!-- 5 -->
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-06" /> <!-- 6 -->
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-07" /> <!-- 7 -->
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-08" /> <!-- 8 -->
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-09" /> <!-- 9 -->
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-10" /> <!-- 10 -->
+			<line x1="98" y1="50" x2="92" y2="50" stroke="#CCCC00" stroke-width=".25" class="hour-tick-11" /> <!-- 11 -->
 		</svg>
 		<script type="text/javascript">
 			"use strict";
 
 			let timeout = 0;
 			let is24HourFormat = true;
+			let showTime = 1;
 
 			const PI = 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196442881097566593344612847564823378;
 			let circumferenceHour = 0;
@@ -65,17 +141,21 @@
 				document.getElementById("minute").setAttribute("stroke-dasharray", (currentMinute * degreePerMinute) + "," + circumferenceMinute);
 				document.getElementById("second").setAttribute("stroke-dasharray", (currentSecond * degreePerSecond) + "," + circumferenceSecond);
 
-				// Set center
-				if (is24HourFormat) {
-					// Add leading 0
-					currentHour = (date.getHours() > 10) ? date.getHours() : "0" + currentHour;
+				switch(showTime) {
+					case 1:
+						// Set center
+						if (is24HourFormat) {
+							// Add leading 0
+							currentHour = (date.getHours() > 10) ? date.getHours() : "0" + currentHour;
+						}
+
+						document.getElementById("time-text").innerHTML = currentHour +
+						                                                (is24HourFormat ? "" : ":") + // Show ':' if 12 format
+						                                                (currentMinute < 10 ? "0" + currentMinute : currentMinute); // Add leading 0
+
+						timeout = setTimeout(tick, 1000);
+						break;
 				}
-
-				document.getElementById("time-text").innerHTML = currentHour +
-				                                                (is24HourFormat ? "" : ":") + // Show ':' if 12 format
-				                                                (currentMinute < 10 ? "0" + currentMinute : currentMinute); // Add leading 0
-
-				timeout = setTimeout(tick, 1000);
 			}
 		</script>
 	</body>
