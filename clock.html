@@ -106,9 +106,10 @@
 						                                                (is24HourFormat ? "" : ":") + // Show ':' if 12 format
 						                                                (currentMinute < 10 ? "0" + currentMinute : currentMinute); // Add leading 0
 
-						timeout = setTimeout(tick, 1000);
 						break;
 				}
+
+				timeout = setTimeout(tick, 1000);
 			}
 		</script>
 	</body>
