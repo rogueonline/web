@@ -42,8 +42,8 @@ document.getElementById("box").addClass("css-class-to-add");
   * `Wrap Text` check to wrap text (note: relative line numbers and current line indicator will be disabled)
 ![Scratchpad](screenshot/scratchpad-screenshot-01.png?raw=true "Right Click Menu")
 * drag file into textarea to open
-* <kbd>ctrl</kbd>+<kbd>&uarr;</kbd> scroll up without moving cursor\
-<kbd>ctrl</kbd>+<kbd>&darr;</kbd> scroll down without moving cursor
+* <kbd>ctrl</kbd>+<kbd>Arrow Up</kbd> scroll up without moving cursor\
+<kbd>ctrl</kbd>+<kbd>Arrow Down</kbd> scroll down without moving cursor
 * set default to sequential line numbers by changing checkbox checked value to false
   * `<input id="is-relative-number" type="checkbox" checked="false" />`
 ![Scratchpad](screenshot/scratchpad-screenshot-02.png?raw=true "Relative Line Number")
