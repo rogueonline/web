@@ -12,7 +12,7 @@ change flag to 0 `let showTime = 0`
 * to resize change css width and height in `#clock-container`
   * `width: 300px`\
 `height: 300px`
-* to use rounded ends change roundEnd to `let roundEnd = true`
+* to use rounded ends change roundEnd to `let roundEnd = true`\
 ![Clock Screenshot](screenshot/clock-screenshot-01.png?raw=true "SVG animated clock")
 
 \
