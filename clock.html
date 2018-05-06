@@ -70,7 +70,7 @@
 			let degreePerHour = 0;
 			let degreePerMinute = 0;
 			let degreePerSecond = 0;
-			let degreeMinuteInHour = 0;
+			let degreeMinuteInHour = 0; // So hour will move along with minute
 
 			window.onload = function() {
 				if (roundEnd) {
@@ -90,10 +90,12 @@
 
 				degreeMinuteInHour = degreePerHour / 60;
 
-				timeout = setTimeout(tick, 0);
+				timeout = setTimeout(function() {
+					tick(true);
+				}, 0);
 			}
 
-			function tick() {
+			function tick(isOnload) {
 				let date = new Date();
 				let currentHour = date.getHours() >= 12 ? date.getHours() - 12 : date.getHours();
 				let currentMinute = date.getMinutes();
@@ -106,22 +108,27 @@
 
 				switch (showTime) {
 					case 1:
-						if (!is24HourFormat) {
-							document.getElementById("time-text").innerHTML = (currentHour < 1 ? "12" : currentHour) +
-							                                                 ":" +
-							                                                 (currentMinute < 10 ? "0" + currentMinute : currentMinute); // Add leading 0
-						}
-						else {
-							currentHour = date.getHours();
-							document.getElementById("time-text").innerHTML = (currentHour < 10 ? "0" + currentHour : currentHour) +
-							                                                 "" +
-							                                                 (currentMinute < 10 ? "0" + currentMinute : currentMinute); // Add leading 0
+						// Update digital clock if 0 seconds or page load
+						if ((currentSecond == 0) || (isOnload)) {
+							if (!is24HourFormat) {
+								document.getElementById("time-text").innerHTML = (currentHour < 1 ? "12" : currentHour) +
+								                                                 ":" +
+								                                                 (currentMinute < 10 ? "0" + currentMinute : currentMinute); // Add leading 0
+							}
+							else {
+								currentHour = date.getHours();
+								document.getElementById("time-text").innerHTML = (currentHour < 10 ? "0" + currentHour : currentHour) +
+								                                                 "" +
+								                                                 (currentMinute < 10 ? "0" + currentMinute : currentMinute); // Add leading 0
+							}
 						}
 
 						break;
 				}
 
-				timeout = setTimeout(tick, 1000);
+				timeout = setTimeout(function() {
+					tick(false);
+				}, 1000);
 			}
 		</script>
 	</body>
