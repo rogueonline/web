@@ -73,9 +73,9 @@
 
 			window.onload = function() {
 				if (roundEnd) {
-					document.getElementById("hour").setAttribute("stroke-linecap", "round");
-					document.getElementById("minute").setAttribute("stroke-linecap", "round");
-					document.getElementById("second").setAttribute("stroke-linecap", "round");
+					document.getElementById("hour").style.strokeLinecap = "round";
+					document.getElementById("minute").style.strokeLinecap = "round";
+					document.getElementById("second").style.strokeLinecap = "round";
 				}
 
 				// Calculate circumference (2 * pi * radius)
