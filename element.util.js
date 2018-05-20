@@ -2,7 +2,9 @@
 
 // Do not attach if already attached to prototype
 if ((Object.prototype.getElementsByAttributeName == undefined) ||
-    (Object.prototype.getElementsByAttributeValue == undefined)) {
+    (Object.prototype.getElementsByAttributeValue == undefined) ||
+    (Object.prototype.addClass == undefined) ||
+    (Object.prototype.removeClass == undefined)) {
 	let elementUtil = (function() {
 		let getElementsByAttributeName = function($this, attribute) {
 			let results = [];
@@ -77,4 +79,4 @@ if ((Object.prototype.getElementsByAttributeName == undefined) ||
 	Object.prototype.getElementsByAttributeValue = elementUtil.getElementsByAttributeValue;
 	Object.prototype.addClass = elementUtil.addClass;
 	Object.prototype.removeClass = elementUtil.removeClass;
-}
+};
