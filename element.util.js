@@ -3,6 +3,7 @@
 // Do not attach if already attached to prototype
 if ((Object.prototype.getElementsByAttributeName == undefined) ||
     (Object.prototype.getElementsByAttributeValue == undefined) ||
+    (Object.prototype.removeElementById == undefined) ||
     (Object.prototype.addClass == undefined) ||
     (Object.prototype.removeClass == undefined)) {
 	let elementUtil = (function() {
@@ -36,12 +37,28 @@ if ((Object.prototype.getElementsByAttributeName == undefined) ||
 			return results;
 		};
 
+		let removeElementById = function($this, id) {
+			let element = $this.getElementById(id);
+
+			if (element != null) {
+				element.parentNode.removeChild(element);
+			}
+
+			return element;
+		};
+
 		let addClass = function($this, value) {
-			$this.classList.add(value);
+			$this.className += " " + value;
 		};
 
 		let removeClass = function($this, value) {
-			$this.className = $this.className.replace(value, "");
+			let classNames = $this.className.split(" ");
+			let index = classNames.indexOf(value);
+
+			if (index > -1) {
+				classNames.splice(index, 1);
+				$this.className = classNames.join(" ");
+			}
 		};
 
 		return {
@@ -57,6 +74,13 @@ if ((Object.prototype.getElementsByAttributeName == undefined) ||
 			 */
 			getElementsByAttributeValue: function(value) {
 				return getElementsByAttributeValue(this, value);
+			},
+
+			/**
+			 * document.removeElementById("element-id");
+			 */
+			removeElementById: function(id) {
+				return removeElementById(this, id);
 			},
 
 			/**
@@ -77,6 +101,7 @@ if ((Object.prototype.getElementsByAttributeName == undefined) ||
 
 	Object.prototype.getElementsByAttributeName = elementUtil.getElementsByAttributeName;
 	Object.prototype.getElementsByAttributeValue = elementUtil.getElementsByAttributeValue;
+	Object.prototype.removeElementById = elementUtil.removeElementById;
 	Object.prototype.addClass = elementUtil.addClass;
 	Object.prototype.removeClass = elementUtil.removeClass;
 };
