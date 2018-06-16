@@ -210,14 +210,16 @@
 					fileReader.readAsText(fileInput.files[0], FILE_TYPE);
 
 					// Initialize filename
-					if (fileInput.value.lastIndexOf("/") > -1) { // Linux
-						filename = fileInput.value.substring((fileInput.value.lastIndexOf("/") + 1), fileInput.value.length);
-					}
-					else if (fileInput.value.lastIndexOf("\\") > -1) { // Windows
-						filename = fileInput.value.substring((fileInput.value.lastIndexOf("\\") + 1), fileInput.value.length);
-					}
-					else {
-						filename = null;
+					if ((fileInput.value != null) && (fileInput.value != undefined)) {
+						if (fileInput.value.lastIndexOf("/") > -1) { // Linux
+							filename = fileInput.value.substring((fileInput.value.lastIndexOf("/") + 1), fileInput.value.length);
+						}
+						else if (fileInput.value.lastIndexOf("\\") > -1) { // Windows
+							filename = fileInput.value.substring((fileInput.value.lastIndexOf("\\") + 1), fileInput.value.length);
+						}
+						else {
+							filename = null;
+						}
 					}
 				}
 				fileInput.click();
