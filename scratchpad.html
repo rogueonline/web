@@ -25,8 +25,11 @@
 				color: #BBBBBB;
 				border: none;
 				resize: none;
-				tab-size: 4;
+				-webkit-size: 4;
 				-moz-tab-size: 4;
+				-ms-tab-size: 4;
+				-o-tab-size: 4;
+				tab-size: 4;
 			}
 
 			input[type=checkbox] {
@@ -145,6 +148,8 @@
 			const LINE_BREAK = "\n";
 			const FILE_TYPE = "utf-8";
 
+			let filename = null;
+
 			window.onload = function() {
 				window.addEventListener("resize", doInput);
 
@@ -190,6 +195,7 @@
 				let textArea = document.getElementById("text-area");
 
 				textArea.value = "";
+				filename = null;
 				doTextAreaClick();
 				doInput();
 				textArea.focus();
@@ -202,6 +208,17 @@
 					let fileReader = new FileReader();
 					fileReader.onload = doFileReader;
 					fileReader.readAsText(fileInput.files[0], FILE_TYPE);
+
+					// Initialize filename
+					if (fileInput.value.lastIndexOf("/") > -1) { // Linux
+						filename = fileInput.value.substring((fileInput.value.lastIndexOf("/") + 1), fileInput.value.length);
+					}
+					else if (fileInput.value.lastIndexOf("\\") > -1) { // Windows
+						filename = fileInput.value.substring((fileInput.value.lastIndexOf("\\") + 1), fileInput.value.length);
+					}
+					else {
+						filename = null;
+					}
 				}
 				fileInput.click();
 				hideContextMenu();
@@ -227,7 +244,7 @@
 			function doSave() {
 				let file = document.createElement("a");
 
-				file.download = "textarea.txt";
+				file.download = (filename != null) ? filename : "textarea.txt";
 				file.href = window.URL.createObjectURL(new Blob([document.getElementById("text-area").value], {type:"text/plain", ending:"native"}));
 				file.style.display = "none";
 				file.onclick = function() { document.body.removeChild(this); };
@@ -408,19 +425,6 @@
 						for (let j = 1; j < wrapLines; j++) {
 							lineNumber.push("");
 						}
-//						let wrapLines = (value.length * 9.7125) / document.getElementById("text-area").scrollWidth;
-//
-//						for (let j = 1; j < wrapLines; j++) {
-//							lineNumber.push("");
-//						}
-//
-//						let charPerLine = Math.floor(document.getElementById("text-area").scrollWidth / 9.7125);
-//						let wrapValue = value.substring(charPerLine, value.length);
-//
-//						while (wrapValue != "") {
-//							lineNumber.push("");
-//							wrapValue = wrapValue.substring(charPerLine, wrapValue.length);
-//						}
 					}
 
 					i++;
