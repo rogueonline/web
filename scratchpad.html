@@ -413,6 +413,7 @@
 						}
 					}
 
+					// Add blank line for wrapped lines
 					if (document.getElementById("is-wrap-text").checked) {
 						let clonedElement = document.getElementById("text-area").cloneNode(false);
 						clonedElement.style.paddingTop = "0px";
@@ -422,7 +423,7 @@
 						clonedElement.value = value;
 
 						document.getElementById("text-area-container").appendChild(clonedElement); // Append to container to get height
-						let wrapLines = clonedElement.scrollHeight / 19; // Calculate number of lines (not correct when zoomed out); scroll height / line height
+						let wrapLines = Math.round(clonedElement.scrollHeight / 19); // scroll height / line height
 						document.getElementById("text-area-container").removeChild(clonedElement); // Remove from container
 
 						for (let j = 1; j < wrapLines; j++) {
