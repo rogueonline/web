@@ -224,6 +224,7 @@
 				}
 				fileInput.click();
 				hideContextMenu();
+				editor.clearHistory(); // Clear undo history
 			}
 			function doDrop(event) {
 				let fileReader = new FileReader();
@@ -385,7 +386,7 @@
 				let values = document.getElementById("text-area").value.split(LINE_BREAK);
 				let lineNumber = new Array();
 
-				let isAbove = true;
+				let isAboveCurrent = true;
 				let relativeNumber = currentLine;
 				let i = 0;
 				values.forEach(function(value) {
@@ -393,9 +394,9 @@
 					    (!document.getElementById("is-wrap-text").checked)) { // Do not use relative number
 						if ((i + 1) == currentLine) {
 							lineNumber.push(">" + (i + 1));
-							isAbove = false;
+							isAboveCurrent = false;
 						}
-						else if (isAbove) { // Above current line
+						else if (isAboveCurrent) { // Above current line
 							lineNumber.push((relativeNumber-- - 1) + "");
 						}
 						else { // Below current line
@@ -420,9 +421,9 @@
 						clonedElement.style.opacity = "0";
 						clonedElement.value = value;
 
-						document.getElementById("text-area-container").appendChild(clonedElement);
-						let wrapLines = clonedElement.scrollHeight / 17; // scroll height / line height
-						document.getElementById("text-area-container").removeChild(clonedElement);
+						document.getElementById("text-area-container").appendChild(clonedElement); // Append to container to get height
+						let wrapLines = clonedElement.scrollHeight / 19; // Calculate number of lines (not correct when zoomed out); scroll height / line height
+						document.getElementById("text-area-container").removeChild(clonedElement); // Remove from container
 
 						for (let j = 1; j < wrapLines; j++) {
 							lineNumber.push("");
